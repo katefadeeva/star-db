@@ -16,7 +16,7 @@ export default class SwapiService {
   }
 
   async getPerson(id) {
-    const person = this.getResource(`/people/${id}`);
+    const person = await this.getResource(`/people/${id}/`);
     return this._transformPerson(person);
   }
 
@@ -26,7 +26,7 @@ export default class SwapiService {
   }
 
   async getPlanet(id) {
-    const planet = await this.getResource(`/planets/${id}`);
+    const planet = await this.getResource(`/planets/${id}/`);
     return this._transformPlanet(planet);
   }
 
@@ -36,7 +36,7 @@ export default class SwapiService {
   }
 
   async getStarship(id) {
-    const starship = await this.getResource(`/starships/${id}`);
+    const starship = await this.getResource(`/starships/${id}/`);
     return this._transformStarship(starship);
   }
 
@@ -45,38 +45,38 @@ export default class SwapiService {
     return item.url.match(idRegExp)[1];
   }
 
-  _transformPlanet(planet) {
+  _transformPlanet = (planet)  => {
     return {
       id: this._extractId(planet),
       name: planet.name,
       population: planet.population,
       rotationPeriod: planet.rotation_period,
       diameter: planet.diameter
-    }
-  }
+    };
+  };
 
-  _transformStarship(starship) {
+  _transformStarship = (starship) => {
     return {
       id: this._extractId(starship),
       name: starship.name,
       model: starship.model,
       manufacturer: starship.manufacturer,
-      constInCredits: starship.constInCredits,
+      costInCredits: starship.cost_in_credits,
       length: starship.length,
       crew: starship.crew,
       passengers: starship.passengers,
-      cargoCapacity: starship.cargoCapacity
-    }
-  }
+      cargoCapacity: starship.cargo_capacity
+    };
+  };
 
-  _transformPerson(person) {
-    return{
+  _transformPerson = (person) => {
+    return {
       id: this._extractId(person),
       name: person.name,
       gender: person.gender,
-      birthYear: person.birthYear,
-      eyeColor: person.eyeColor
-    }
+      birthYear: person.birth_year,
+      eyeColor: person.eye_color
+    };
   }
 
 }
