@@ -1,34 +1,26 @@
 import React, { Component } from 'react';
-
+import PeoplePage from "../people-page";
 import Header from '../header';
 import RandomPlanet from '../random-planet';
 
 import './app.css';
-import ErrorIndicator from "../error-indicator";
-import PeoplePage from "../people-page";
+import ErrorBoundry from "../error-boundry";
 
 export default class App extends Component {
 
   state = {
-    showRandomPlanet: true,
-    hasError: false
-  }
-
-  componentDidCatch() {
-    this.setState({hasError: true})
+    showRandomPlanet: true
   }
 
   render() {
-
-    if (this.state.hasError) {
-      return <ErrorIndicator />
-    }
     return (
-        <div className="wrapper">
-          <Header />
-          <RandomPlanet />
-          <PeoplePage />
-        </div>
+        <ErrorBoundry>
+          <div className="wrapper">
+            <Header />
+            <RandomPlanet />
+            <PeoplePage />
+          </div>
+        </ErrorBoundry>
     );
-  }
+  };
 };

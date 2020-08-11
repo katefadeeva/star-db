@@ -1,41 +1,55 @@
 import React, {Component} from "react";
-
-import './people-page.css';
 import ItemList from "../item-list";
-import PersonDetails from "../person-details";
-import ErrorIndicator from "../error-indicator";
+import ItemDetails, {Record} from "../item-details";
+import SwapiService from "../../services/swapi-service";
+import ErrorBoundry from "../error-boundry";
+import Row from "../row";
+import './people-page.css';
 
 export default class PeoplePage extends Component {
 
-  state = {
-    selectedPerson: 1,
-    hasError: false
-  }
+  swapiService = new SwapiService();
 
-  componentDidCatch() {
-    this.setState({hasError: true})
+  state = {
+    selectedPerson: 1
   }
 
   onPersonSelected = (selectedPerson) => {
     this.setState( {
       selectedPerson: selectedPerson
-    })
+    });
   }
 
   render() {
 
-    if (this.state.hasError) {
-      return <ErrorIndicator />
-    }
+    const {getAllPeople, getPerson, getPersonImage} = this.swapiService;
+
+    const itemList = (
+        <ErrorBoundry>
+          <ItemList
+              onItemSelected = {this.onPersonSelected}
+              getData = {getAllPeople}>
+            {(i) => (`${i.name} (${i.birthYear})`)}
+          </ItemList>
+        </ErrorBoundry>
+
+    );
+
+    const personDetails = (
+        <ErrorBoundry>
+          <ItemDetails
+            itemId={this.state.selectedPerson}
+            getData={getPerson}
+            getImageUrl={getPersonImage}>
+            <Record field="gender" label="Gender" />
+            <Record field="birthYear" label="Birth Year" />
+            <Record field="eyeColor" label="Eye Color" />
+          </ItemDetails>
+        </ErrorBoundry>
+    );
 
     return (
-        <div className="row mb2">
-          <div className="col-md-6">
-            <ItemList onItemSelected = {this.onPersonSelected}/>
-          </div>
-          <div className="col-md-6">
-            <PersonDetails personId={this.state.selectedPerson}/>
-          </div>
-        </div>
-    )};
+          <Row left={itemList} right={personDetails} />
+    );
+  };
 }
